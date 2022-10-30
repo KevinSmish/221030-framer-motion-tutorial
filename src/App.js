@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Home from "./components/Home";
+import Base from "./components/Base";
+import Toppings from "./components/Toppings";
+import Order from "./components/Order";
 
-function App() {
+export default function App() {
+  const [pizza, setPizza] = useState({ base: "", toppings: [] });
+
+  const addBase = (base) => {
+    setPizza({ ...pizza, base });
+  };
+
+  const addTopping = (topping) => {
+    const toppings = !pizza.toppings.includes(topping)
+      ? [...pizza.toppings, topping]
+      : pizza.toppings.filter((item) => item !== topping);
+
+    setPizza({ ...pizza, toppings });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Routes>
+        <Route
+          path="/base"
+          element={<Base addBase={addBase} pizza={pizza} />}
+        />
+
+        <Route
+          path="/toppings"
+          element={<Toppings addTopping={addTopping} pizza={pizza} />}
+        />
+        <Route path="/order" element={<Order pizza={pizza} />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </>
   );
 }
-
-export default App;
